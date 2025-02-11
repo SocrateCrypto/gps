@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html>
+  <head>
+   
+    <script src="serial.js"></script>
+    <script src="application.js"></script>
+    <link href="nouislider.min.css" rel="stylesheet">
+    
+
+    
+   
+
+
+    <meta charset="UTF-8">
+  <title>Coordinate Editor</title>
+  <style>
+ 
+    .slider-container {
+      width: 95%;
+      margin: 15px 0;
+      padding: 25px 0;
+      text-align: left;
+      margin-left: 30px; 
+    }
+    .slider-label {
+      color: rgb(252, 255, 252);
+      font-family: 'Courier New', Courier, monospace;
+      margin-bottom: 12px;
+    }
+   
+   
+    body {
+      background-color: rgb(82, 103, 181);
+      color: rgb(26, 5, 184);
+      font-family: 'Courier New', Courier, monospace;
+    }
+    
+   
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      color: rgb(25, 118, 25);
+      table-layout: auto;  
+    }
+    th, td {
+      border: 1px solid green;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #0f1cab;
+    }
+    .column-n {
+      background-color: #0f97bd; /* Темный фон для N */
+      color: rgb(0, 3, 0); /* Светло-зеленый текст для N */
+    }
+    input[type="number"], input[type="text"] {
+      background-color: rgb(57, 88, 212);
+      color: rgb(241, 246, 241);
+      border: 1px solid green;
+      padding: 5px;
+      font-family: 'Courier New', Courier, monospace;
+      width: 100%; /* Заполняет ячейку на всю ширину */
+      box-sizing: border-box; /* Учитывает padding и border в общей ширине */
+    }
+    button {
+      background-color: rgb(57, 88, 212);
+      color: rgb(242, 248, 242);
+      border: 1px solid green;
+      padding: 10px;
+      font-family: 'Courier New', Courier, monospace;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: #333;
+    }
+    .file-input-container {
+      position: relative;
+      display: inline-block;
+      width: 48px;
+      height: 48px;
+    }
+    .file-input {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      cursor: pointer;
+    }
+    .file-input-label {
+      display: inline-block;
+      width: 60px;
+      height: 60px;
+      background: url('dow.png') no-repeat center center;
+      background-size: contain;
+      cursor: pointer;
+      position: relative;
+      top: 14px; /* Сдвиг вниз */
+      left: -3px; /* Сдвиг влево */
+    }
+    .lime-green-stripe {
+      width: 100%;
+      height: 5px;
+      background-color: limegreen;
+    }
+
+    .toggle-container{
+       
+       
+      margin: 25px 0;
+      padding: 25px 0;
+      text-align: left;
+      margin-left: 30px; 
+
+
+	border-color: red;
+}
+
+
+
+    
+    
+    
+  </style>
+  </head>
+  <body>
+    <div class="main-content">
+      <div class="connect-container">
+        <button id="connect" class="button black">Connect</button>
+        <span id="status"></span>
+      </div>
+    
+    </div>
+    
+   
+        
+    <div class="lime-green-stripe"></div>
+    <div class="slider-container">
+        <label for="slider" class="slider-label">Range of Alarm</label>
+        <div id="range"></div>
+        
+      </div>
+      <div class="toggle-container">
+        
+        <div id="slider-toggle"></div>
+        <label for="range" >LED1</label>
+      </div>
+      <div class="toggle-container">
+        
+        <div id="slider-toggle1"></div>
+        <label for="range" >LED2</label>
+      </div>
+      <div class="toggle-container">
+        
+        <div id="slider-toggle2"></div>
+        <label for="range" >LED3</label>
+       
+      </div>
+      <div class="toggle-container">
+        <button onclick="reedSettings()">MCU-> ReedSettings</button>
+        <button onclick="writeSettings()">WriteSettings->MCU</button>
+      
+       
+      </div>
+
+      <div class="lime-green-stripe"></div>
+      
+     
+    <div class="file-input-container">
+        <input type="file" id="fileInput" accept=".txt" class="file-input">
+        <label for="fileInput" class="file-input-label"></label>
+      </div>
+      <button onclick="reedCoordinates()">MCU->ReedDB</button>
+  <button onclick="saveCoordinates()">WriteDB->MCU</button>
+  <button onclick="addRow()">Add Row</button>
+  <table id="coordinateTable">
+    <thead>
+      <tr>
+        <th class="column-n">N</th>
+        <th>Index</th>
+        <th>X</th>
+        <th>Y</th>
+        <th>TYPE</th>
+        <th>SPEED</th>
+        <th>DIRTYPE</th>
+        <th>DIRECTION</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Динамически заполненные строки координат -->
+    </tbody>
+  </table>
+  
+  
+  <script>
+    
+    var coordinates = [];
+
+    document.getElementById('fileInput').addEventListener('change', function(event) {
+      var file = event.target.files[0];
+      var reader = new FileReader();
+      reader.onload = function(e) {
+        var lines = e.target.result.split('\n');
+        coordinates = [];
+        for (var i = 1; i < lines.length; i++) { // Пропускаем заголовок
+          var fields = lines[i].split(',');
+          if (fields.length === 7) {
+            coordinates.push({
+              n: i,
+              idx: fields[0],
+              x: parseFloat(fields[1]),
+              y: parseFloat(fields[2]),
+              type: fields[3],
+              speed: parseFloat(fields[4]),
+              dirtype: parseFloat(fields[5]),
+              direction: parseFloat(fields[6])
+            });
+          }
+        }
+        displayCoordinates();
+      };
+      reader.readAsText(file);
+    });
+
+    function displayCoordinates() {
+      var tableBody = document.getElementById('coordinateTable').getElementsByTagName('tbody')[0];
+      tableBody.innerHTML = '';
+      for (var i = 0; i < coordinates.length; i++) {
+        var row = tableBody.insertRow();
+        var cellN = row.insertCell(0);
+        var cellIndex = row.insertCell(1);
+        var cellX = row.insertCell(2);
+        var cellY = row.insertCell(3);
+        var cellType = row.insertCell(4);
+        var cellSpeed = row.insertCell(5);
+        var cellDirtype = row.insertCell(6);
+        var cellDirection = row.insertCell(7);
+        var cellActions = row.insertCell(8);
+        cellN.innerText = i + 1;
+        cellN.className = 'column-n';
+        cellIndex.innerText = coordinates[i].idx;
+        cellX.innerHTML = `<input type="text" value="${coordinates[i].x}" onchange="updateCoordinate(${i}, 'x', this.value)">`;
+        cellY.innerHTML = `<input type="text" value="${coordinates[i].y}" onchange="updateCoordinate(${i}, 'y', this.value)">`;
+        cellType.innerHTML = `<input type="text" value="${coordinates[i].type}" onchange="updateCoordinate(${i}, 'type', this.value)">`;
+        cellSpeed.innerHTML = `<input type="number" value="${coordinates[i].speed}" onchange="updateCoordinate(${i}, 'speed', this.value)">`;
+        cellDirtype.innerHTML = `<input type="number" value="${coordinates[i].dirtype}" onchange="updateCoordinate(${i}, 'dirtype', this.value)">`;
+        cellDirection.innerHTML = `<input type="number" value="${coordinates[i].direction}" onchange="updateCoordinate(${i}, 'direction', this.value)">`;
+        cellActions.innerHTML = `<button onclick="deleteRow(${i})">Delete</button>`;
+      }
+    }
+
+    function updateCoordinate(index, field, value) {
+      coordinates[index][field] = field === 'type' ? value : parseFloat(value);
+    }
+
+    function addRow() {
+      coordinates.unshift({
+        n: 1,
+        idx: '',
+        x: 0,
+        y: 0,
+        type: '',
+        speed: 0,
+        dirtype: 0,
+        direction: 0
+      });
+
+      // Обновление значения N для всех строк
+      for (var i = 0; i < coordinates.length; i++) {
+        coordinates[i].n = i + 1;
+      }
+
+      displayCoordinates();
+    }
+
+    function deleteRow(index) {
+      coordinates.splice(index, 1);
+
+      // Обновление значения N для всех строк после удаления
+      for (var i = 0; i < coordinates.length; i++) {
+        coordinates[i].n = i + 1;
+      }
+
+      displayCoordinates();
+    }
+
+    function saveCoordinates() {
+      console.log('Saved coordinates:', coordinates);
+      alert('Coordinates saved to console.');
+    }
+
+    window.onload = displayCoordinates;
+  </script>
+  <script src="nouislider.min.js"></script>
+  <script src="slider.js"></script>
+  <script src="togle.js"></script>
+  <script src="wNumb.min.js"></script>
+  </body>
+</html>
