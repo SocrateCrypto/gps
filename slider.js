@@ -2,8 +2,8 @@ var clickPipsSlider = document.getElementById('range');
 
 noUiSlider.create(clickPipsSlider, {
     range: {
-        min: 100,
-        max: 2000
+        min: 500,
+        max: 3000
     },
     connect: 'lower',
     start: [1000],
