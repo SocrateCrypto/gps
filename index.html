@@ -6,6 +6,7 @@
     <link href="nouislider.min.css" rel="stylesheet">
     <meta charset="UTF-8">
     <title>Coordinate Editor</title>
+  
     <style>
       /* Стили остаются такими же */
       .slider-container {
@@ -22,7 +23,7 @@
       }
       body {
         background-color: rgb(82, 103, 181);
-        color: rgb(26, 5, 184);
+        color: rgb(131, 228, 106);
         font-family: 'Courier New', Courier, monospace;
       }
       table {
@@ -148,9 +149,10 @@
       <button id="reedSettings" class="button">MCU-> ReedSettings</button>
       <button id="writeSettings"class="button" >WriteSettings->MCU</button>
     </div>
-
+    <div id="contentMCU"></div>
     <div class="lime-green-stripe"></div>
-
+    <div id="content1"></div>
+    <div id="content2"></div>
     <div class="file-input-container">
       <input type="file" id="fileInput" accept=".txt" class="file-input">
       <label for="fileInput" class="file-input-label"></label>
@@ -159,6 +161,10 @@
     <button id="downloadButton"><img src="log.png" alt="download"></button>
     
     <button id="saveCoordinates"class="button">WriteDB->MCU</button>
+    
+      
+   
+    
     <button onclick="addRow()">Add Row</button>
     <button onclick="clearTable()">Clear Table</button> <!-- Кнопка для очистки таблицы -->
     <table id="coordinateTable">
@@ -234,6 +240,8 @@
           cellDirtype.innerHTML = `<input type="number" value="${coordinates[i].dirtype}" onchange="updateCoordinate(${i}, 'dirtype', this.value)">`;
           cellDirection.innerHTML = `<input type="number" value="${coordinates[i].direction}" onchange="updateCoordinate(${i}, 'direction', this.value)">`;
           cellActions.innerHTML = `<button onclick="deleteRow(${i})">Delete</button>`;
+          displayText1("DBase Загрузка данных размер строк  "+coordinates.length);
+          displayText2("для передачи базы данных в память устройства нажмите WriteDB->MCU");
         }
       }
 
@@ -276,6 +284,8 @@
         document.getElementById('fileInput').value = '';
         coordinates = [];
         displayCoordinates();
+        displayText1("DBase Очистка данных  размер строк  "+coordinates.length);
+        displayText2(" ");
     }
 
    
@@ -288,6 +298,8 @@
   <script src="wNumb.min.js"></script>
   <script src="download_log.js"></script>
   <script src="buttons_event.js"></script>
+  <script src="speedometr.js"></script>
+  <script src="parsing_string.js"></script>
+  <script src="pars_function2.js"></script>
   </body>
 </html>
-

@@ -17,11 +17,23 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   
-    sliderToggle.noUiSlider.on('set', function(values, handle) {
+    /**********sliderToggle.noUiSlider.on('set', function(values, handle) {
       var value = values[handle];
       console.log('Toggle value: ' + value);
       // Дополнительный код для обработки значения переключателя
     });
+     sliderToggle1.noUiSlider.on('set', function(values, handle) {
+      var value1 = values[handle];
+      console.log('Toggle1 value: ' + value1);
+      // Дополнительный код для обработки значения переключателя
+    });
+     sliderToggle2.noUiSlider.on('set', function(values, handle) {
+      var value2 = values[handle];
+      console.log('Toggle1 value: ' + value2);
+      // Дополнительный код для обработки значения переключателя
+    });
+    
+    */
   
     // Установка ширины переключателя на 80 пикселей
     sliderToggle.style.width = '50px';
@@ -46,11 +58,7 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   
-    sliderToggle1.noUiSlider.on('set', function(values, handle) {
-      var value1 = values[handle];
-      console.log('Toggle1 value: ' + value1);
-      // Дополнительный код для обработки значения переключателя
-    });
+   
   
     // Установка ширины переключателя на 80 пикселей
     sliderToggle1.style.width = '50px';
@@ -76,14 +84,15 @@ document.addEventListener('DOMContentLoaded', function() {
       }
     });
   
-    sliderToggle2.noUiSlider.on('set', function(values, handle) {
-      var value2 = values[handle];
-      console.log('Toggle1 value: ' + value2);
-      // Дополнительный код для обработки значения переключателя
-    });
+   
   
     // Установка ширины переключателя на 80 пикселей
     sliderToggle2.style.width = '50px';
   });
+
+
+  // script.js
+
+
   
   
