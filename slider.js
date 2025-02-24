@@ -6,7 +6,7 @@ noUiSlider.create(clickPipsSlider, {
         max: 100
     },
     connect: 'lower',
-    start: [1000],
+    start: [10],
     pips: {mode: 'count', values: 5},
     tooltips: [
         // no tooltip
