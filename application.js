@@ -106,12 +106,33 @@
           }
 
           if (handleDecodedString2(decodedString, "gt_s", "&", jsonArrayLog2)) {
-            // Преобразуем массив в строку с новыми абзацами для каждого объекта
-            const jsonString = jsonArrayLog2.map(obj => JSON.stringify(obj, null, 2)).join('\n\n');
-        
+            // Преобразуем массив в строку с новыми абзацами и разделяем линиями для каждого объекта
+            const jsonString = jsonArrayLog2.map((obj, index) => {
+              const timestamp = `${obj.timestampUTC.Year}.${obj.timestampUTC.Month}.${obj.timestampUTC.Day} ${obj.timestampUTC.Hour}:${obj.timestampUTC.Minute}:${obj.timestampUTC.Second}`;
+              return  `
+        #${index + 1}    ${timestamp}
+              ================================================
+              Событие:        ${obj.event}  ${obj.aux_text}
+              ------------------------------------------------
+              Latitude:       ${obj.x}       Year:         ${obj.timestampUTC.Year}
+              Longitude:      ${obj.y}      Month:        ${obj.timestampUTC.Month}
+              Azimuth :       ${obj.azimut_vector}             Day:          ${obj.timestampUTC.Day}
+              Speed:          ${obj.speed}                   (UTC)  Hour:    ${obj.timestampUTC.Hour}
+              Distance:       ${obj.dist}                   (UTC)  Minute:  ${obj.timestampUTC.Minute}
+                                                  (UTC)  Second:  ${obj.timestampUTC.Second}
+              ------------------------------------------------
+              Radar Index:           ${obj._RADAR_date_._radar_idx_}
+              Radar Latitude:        ${obj._RADAR_date_._radar_x}
+              Radar Longitude:       ${obj._RADAR_date_._radar_y}
+              ------------------------------------------------
+                      `;
+                  }).join('\n');                         
+            
+          
+
             // Создаем объект Blob
             const blob = new Blob([jsonString], { type: "text/plain" });
-        
+
             // Получаем текущую дату и время в формате UTC
             const now = new Date();
             const year = now.getUTCFullYear();
@@ -121,7 +142,7 @@
             const minutes = String(now.getUTCMinutes()).padStart(2, '0');
             const seconds = String(now.getUTCSeconds()).padStart(2, '0');
             const dateTimeUTC = `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
-        
+
             // Создаем ссылку для скачивания
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
@@ -129,12 +150,12 @@
             a.download = `Log_GPS_${dateTimeUTC}.txt`; // добавляем дату и время к названию файла
             document.body.appendChild(a);
             a.click();
-        
+
             // Удаляем ссылку после скачивания
-            document.body.removeChild(a);
+            document.body.removeChild
             URL.revokeObjectURL(url);
-        }
-        
+          }
+
           /************************************************************************************** */
 
         };

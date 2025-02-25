@@ -172,8 +172,8 @@
         <tr>
           <th class="column-n">N</th>
           <th>Index</th>
-          <th>X</th>
-          <th>Y</th>
+          <th>Y</th> <!-- Меняем порядок столбцов -->
+          <th>X</th> <!-- Меняем порядок столбцов -->
           <th>TYPE</th>
           <th>SPEED</th>
           <th>DIRTYPE</th>
@@ -223,8 +223,8 @@
           var row = tableBody.insertRow();
           var cellN = row.insertCell(0);
           var cellIndex = row.insertCell(1);
-          var cellX = row.insertCell(2);
-          var cellY = row.insertCell(3);
+          var cellY = row.insertCell(2); // Меняем порядок столбцов
+          var cellX = row.insertCell(3); // Меняем порядок столбцов
           var cellType = row.insertCell(4);
           var cellSpeed = row.insertCell(5);
           var cellDirtype = row.insertCell(6);
