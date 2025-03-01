@@ -114,16 +114,16 @@
               ================================================
               Событие:        ${obj.event}  ${obj.aux_text}
               ------------------------------------------------
-              Latitude:       ${obj.x}       Year:         ${obj.timestampUTC.Year}
-              Longitude:      ${obj.y}      Month:        ${obj.timestampUTC.Month}
+              Latitude:       ${obj.y}       Year:         ${obj.timestampUTC.Year}
+              Longitude:      ${obj.x}      Month:        ${obj.timestampUTC.Month}
               Azimuth :       ${obj.azimut_vector}             Day:          ${obj.timestampUTC.Day}
               Speed:          ${obj.speed}                   (UTC)  Hour:    ${obj.timestampUTC.Hour}
               Distance:       ${obj.dist}                   (UTC)  Minute:  ${obj.timestampUTC.Minute}
                                                   (UTC)  Second:  ${obj.timestampUTC.Second}
               ------------------------------------------------
               Radar Index:           ${obj._RADAR_date_._radar_idx_}
-              Radar Latitude:        ${obj._RADAR_date_._radar_x}
-              Radar Longitude:       ${obj._RADAR_date_._radar_y}
+              Radar Latitude:        ${obj._RADAR_date_._radar_y}
+              Radar Longitude:       ${obj._RADAR_date_._radar_x}
               ------------------------------------------------
                       `;
                   }).join('\n');                         
